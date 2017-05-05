@@ -4,6 +4,12 @@
 
 ## Install
 
+```
+npm install vue-append --save
+#or
+yarn add vue-append
+```
+
 #### Es6 module
 
 - Available through npm as `vue-append`.
