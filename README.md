@@ -6,7 +6,7 @@
 
 ```
 npm install vue-append --save
-#or
+# or
 yarn add vue-append
 ```
 
