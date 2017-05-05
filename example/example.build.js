@@ -9751,11 +9751,10 @@ Vue$3.compile = compileToFunctions;
     nodes.forEach(function(_node){
       var node = _node.cloneNode(true)
 
-      console.log( target.nextSibling)
       traverseNode(target.insertBefore(node, target.nextSibling), function(el){
         if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
           (!el.type || el.type === 'text/javascript') && !el.src)
-          window['eval'].call(window, el.innerHTML)
+          new Function(el.innerHTML)()
       })
     })
   }
@@ -9768,9 +9767,13 @@ Vue$3.compile = compileToFunctions;
 
     Vue.directive('append', {
       inserted: function (el, data) {
-        console.log(el)
-        append(fragment(data.value), el)
-        console.log(el)
+        try {
+          append(fragment(data.value), el);
+        } catch (e) {
+          console.error('the vue-append module parse html was error: ', data.value)
+          console.log('--------')
+          console.error(e)
+        }
       }
     })
   }

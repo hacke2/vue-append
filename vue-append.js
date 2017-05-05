@@ -15,7 +15,7 @@
     };
 
   var fragment = function(html, name, properties) {
-    var dom, nodes, container
+    var dom, container
     // A special case optimization for a single tag
     if (singleTagRE.test(html)) dom = document.createElement(RegExp.$1)
 
@@ -46,7 +46,7 @@
       traverseNode(target.insertBefore(node, target.nextSibling), function(el){
         if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
           (!el.type || el.type === 'text/javascript') && !el.src)
-          window['eval'].call(window, el.innerHTML)
+          new Function(el.innerHTML)()
       })
     })
   }
@@ -59,7 +59,13 @@
 
     Vue.directive('append', {
       inserted: function (el, data) {
-        append(fragment(data.value), el);
+        try {
+          append(fragment(data.value), el);
+        } catch (e) {
+          console.error('the vue-append module parse html was error: ', data.value)
+          console.log('--------')
+          console.error(e)
+        }
       }
     })
   }
