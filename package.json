@@ -1,0 +1,33 @@
+{
+  "name": "vue-append",
+  "version": "1.0.0",
+  "description": "vue-append, like v-html directive, but it can call javascript function",
+  "main": "vue-append.js",
+  "files": [
+    "vue-append.js"
+  ],
+  "scripts": {
+    "build": "uglifyjs vue-append.js -c -m > vue-append.min.js",
+    "dev": "webpack --watch example/example.js example/example.build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hacke2/vue-append.git"
+  },
+  "keywords": [
+    "vue",
+    "vue-append",
+    "vue-html-call-function"
+  ],
+  "author": "hacke2",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hacke2/vue-append/issues"
+  },
+  "homepage": "https://github.com/hacke2/vue-append#readme",
+  "dependencies": {
+    "uglify-js": "^2.8.22",
+    "vue": "^2.3.2",
+    "webpack": "^2.5.0"
+  }
+}
