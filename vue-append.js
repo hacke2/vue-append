@@ -43,7 +43,6 @@
     nodes.forEach(function(_node){
       var node = _node.cloneNode(true)
 
-      console.log( target.nextSibling)
       traverseNode(target.insertBefore(node, target.nextSibling), function(el){
         if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
           (!el.type || el.type === 'text/javascript') && !el.src)
@@ -60,9 +59,7 @@
 
     Vue.directive('append', {
       inserted: function (el, data) {
-        console.log(el)
-        append(fragment(data.value), el)
-        console.log(el)
+        append(fragment(data.value), el);
       }
     })
   }
