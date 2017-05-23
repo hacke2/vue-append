@@ -48,7 +48,7 @@ template:
 
 ``` html
 <div id="app">
-    <div v-append="html"></div>
+    <div v-append="html" @appended="appended"></div>
 </div>
 ```
 
@@ -76,6 +76,11 @@ new Vue({
   el: '#app',
   data: {
     html: html
+  },
+  methods: {
+    appended() {
+      console.log('appended!')
+    }
   }
 });
 ```
