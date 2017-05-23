@@ -30,6 +30,16 @@ yarn add vue-append
 
 - You can also directly include it with a `<script>` tag. It will automatically install itself, and will add a global `VueAppend`.
 
+## Event
+
+### appended
+
+- if html append and no throw error, it will fire `appended` event.
+
+### appenderr
+
+- if throw error when html appended, it will fire `appenderr` event.
+
 ## Usage
 
 #### Using the `v-append` directive

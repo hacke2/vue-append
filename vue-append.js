@@ -1,6 +1,23 @@
 ;(function () {
   var vueAppend = {}
 
+  var fireEvent = function(element,event){
+    if (document.createEventObject){
+      // IE浏览器支持fireEvent方法
+      var evt = document.createEventObject();
+      return element.fireEvent('on'+event,evt)
+    }
+    else{
+      // 其他标准浏览器使用dispatchEvent方法
+      var evt = document.createEvent( 'HTMLEvents' );
+      // initEvent接受3个参数：
+      // 事件类型，是否冒泡，是否阻止浏览器的默认行为
+      evt.initEvent(event, true, true);
+      return !element.dispatchEvent(evt);
+    }
+  };
+
+
   var slice = [].slice,
     singleTagRE = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
     tagExpanderRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
@@ -60,8 +77,10 @@
     Vue.directive('append', {
       inserted: function (el, data) {
         try {
-          append(fragment(data.value), el);
+          append(fragment(data.value), el)
+          fireEvent(el, 'appended')
         } catch (e) {
+          fireEvent(el, 'appenderr')
           console.error('the vue-append module parse html was error: ', data.value)
           console.log('--------')
           console.error(e)

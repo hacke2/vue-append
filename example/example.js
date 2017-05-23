@@ -19,5 +19,10 @@ new Vue({
   el: '#app',
   data: {
     html: html
+  },
+  methods: {
+    appended() {
+      console.log('appended!')
+    }
   }
 });
