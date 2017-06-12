@@ -62,8 +62,11 @@
 
       traverseNode(target.insertBefore(node, target.nextSibling), function(el){
         if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
-          (!el.type || el.type === 'text/javascript') && !el.src)
-          new Function(el.innerHTML)()
+          (!el.type || el.type === 'text/javascript') && !el.src) {
+          setTimeout(function () {
+            new Function(el.innerHTML)()
+          })
+        }
       })
     })
   }
