@@ -60,33 +60,44 @@
     nodes.forEach(function(_node){
       var node = _node.cloneNode(true)
 
-      traverseNode(target.insertBefore(node, target.nextSibling), function(el){
-        if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
-          (!el.type || el.type === 'text/javascript') && !el.src) {
-          setTimeout(function () {
-            new Function(el.innerHTML)()
-          })
-        }
-      })
+      if (document.documentElement !== target && document.documentElement.contains(target)) {
+        traverseNode(target.insertBefore(node, null), function(el) {
+          if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
+            (!el.type || el.type === 'text/javascript') && !el.src) {
+            setTimeout(function() {
+              new Function(el.innerHTML)()
+            })
+          }
+        })
+      }
     })
+  }
+
+  var exec = function(el, val) {
+    if (val) {
+      try {
+        append(fragment(val), el)
+        fireEvent(el, 'appended')
+      } catch (e) {
+        fireEvent(el, 'appenderr')
+        console.error('the vue-append module parse html was error: ', val)
+        console.log('--------')
+        console.error(e)
+      } 
+    }
   }
 
   // exposed global options
   vueAppend.config = {};
 
   vueAppend.install = function (Vue) {
-
-
     Vue.directive('append', {
       inserted: function (el, data) {
-        try {
-          append(fragment(data.value), el)
-          fireEvent(el, 'appended')
-        } catch (e) {
-          fireEvent(el, 'appenderr')
-          console.error('the vue-append module parse html was error: ', data.value)
-          console.log('--------')
-          console.error(e)
+        exec(el, data.value);
+      },
+      componentUpdated: function (el, data) {
+        if (data.value !== data.oldValue) {
+          exec(el, data.value);
         }
       }
     })
