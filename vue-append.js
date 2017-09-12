@@ -65,7 +65,8 @@
           if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
             (!el.type || el.type === 'text/javascript') && !el.src) {
             setTimeout(function() {
-              new Function(el.innerHTML)()
+              var target = el.ownerDocument ? el.ownerDocument.defaultView : window
+              target['eval'].call(target, el.innerHTML)
             })
           }
         })
@@ -76,6 +77,7 @@
   var exec = function(el, val) {
     if (val) {
       try {
+        el.innerHTML = '';
         append(fragment(val), el)
         fireEvent(el, 'appended')
       } catch (e) {
