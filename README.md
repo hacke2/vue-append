@@ -56,7 +56,7 @@ js:
 
 ```js
 import Vue from 'vue/dist/vue.esm'
-import VueAppend from '../'
+import VueAppend from 'vue-append'
 
 // use the plugin
 Vue.use(VueAppend);
