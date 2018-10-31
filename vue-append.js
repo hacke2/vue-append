@@ -110,7 +110,7 @@
   } else if (typeof define == "function" && define.amd) {
     define([], function(){ return vueAppend })
   } else if (window.Vue) {
-    window.VueTouch = vueAppend
+    window.VueAppend = vueAppend
     Vue.use(vueAppend)
   }
 
