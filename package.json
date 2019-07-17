@@ -1,10 +1,11 @@
 {
   "name": "vue-append",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "description": "vue-append, like v-html directive, but it can call javascript function",
   "main": "vue-append.js",
   "files": [
-    "vue-append.js"
+    "vue-append.js",
+    "vue-append.min.js"
   ],
   "scripts": {
     "build": "uglifyjs vue-append.js -c -m > vue-append.min.js",

@@ -1,17 +1,14 @@
-;(function () {
+;
+(function () {
   var vueAppend = {}
 
-  var fireEvent = function(element,event){
-    if (document.createEventObject){
-      // IE浏览器支持fireEvent方法
+  var fireEvent = function (element, event) {
+    if (document.createEventObject) {
+      // for ie
       var evt = document.createEventObject();
-      return element.fireEvent('on'+event,evt)
-    }
-    else{
-      // 其他标准浏览器使用dispatchEvent方法
-      var evt = document.createEvent( 'HTMLEvents' );
-      // initEvent接受3个参数：
-      // 事件类型，是否冒泡，是否阻止浏览器的默认行为
+      return element.fireEvent('on' + event, evt)
+    } else {
+      var evt = document.createEvent('HTMLEvents');
       evt.initEvent(event, true, true);
       return !element.dispatchEvent(evt);
     }
@@ -26,12 +23,15 @@
     tableRow = document.createElement('tr'),
     containers = {
       'tr': document.createElement('tbody'),
-      'tbody': table, 'thead': table, 'tfoot': table,
-      'td': tableRow, 'th': tableRow,
+      'tbody': table,
+      'thead': table,
+      'tfoot': table,
+      'td': tableRow,
+      'th': tableRow,
       '*': document.createElement('div')
     };
 
-  var fragment = function(html, name, properties) {
+  var fragment = function (html, name, properties) {
     var dom, container
     // A special case optimization for a single tag
     if (singleTagRE.test(html)) dom = document.createElement(RegExp.$1)
@@ -43,7 +43,7 @@
 
       container = containers[name]
       container.innerHTML = '' + html
-      dom = slice.call(container.childNodes).map(function(child){
+      dom = slice.call(container.childNodes).map(function (child) {
         return container.removeChild(child)
       })
     }
@@ -53,39 +53,65 @@
 
   function traverseNode(node, fun) {
     fun(node)
-    for (var key in node.childNodes) traverseNode(node.childNodes[key], fun)
+    for (var key in node.childNodes) {
+      traverseNode(node.childNodes[key], fun)
+    }
   }
 
-  var append = function (nodes, target) {
-    nodes.forEach(function(_node){
+  var append = function (nodes, target, cb) {
+    var pendingIndex = 0;
+    var doneIndex = 0;
+    nodes.forEach(function (_node) {
       var node = _node.cloneNode(true)
-
       if (document.documentElement !== target && document.documentElement.contains(target)) {
-        traverseNode(target.insertBefore(node, null), function(el) {
-          if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
-            (!el.type || el.type === 'text/javascript') && !el.src) {
-            setTimeout(function() {
+        traverseNode(target.insertBefore(node, null), function (el) {
+          if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' && (!el.type || el.type === 'text/javascript')) {
+            pendingIndex++;
+            if (el.src) {
+              var http = new XMLHttpRequest();
+              http.open('GET', el.src, true);
+              http.onreadystatechange = function () {
+                if (http.readyState === 4) {
+                  // Makes sure the document is ready to parse.
+                  if (http.status === 200) {
+                    el.innerHTML = http.responseText;
+                    var target = el.ownerDocument ?
+                      el.ownerDocument.defaultView :
+                      window;
+                    target['eval'].call(target, el.innerHTML);
+                    doneIndex++;
+                    if (doneIndex === pendingIndex) {
+                      cb();
+                    }
+                  }
+                }
+              };
+              http.send(null);
+            } else {
               var target = el.ownerDocument ? el.ownerDocument.defaultView : window
-              target['eval'].call(target, el.innerHTML)
-            })
+              target['eval'].call(target, el.innerHTML);
+              doneIndex++;
+              if (doneIndex === pendingIndex) {
+                cb();
+              }
+            }
           }
         })
       }
     })
   }
 
-  var exec = function(el, val) {
+  var exec = function (el, val) {
     if (val) {
       try {
         el.innerHTML = '';
-        append(fragment(val), el)
-        fireEvent(el, 'appended')
+        append(fragment(val), el, function cb() {
+          fireEvent(el, 'appended');
+        })
       } catch (e) {
-        fireEvent(el, 'appenderr')
-        console.error('the vue-append module parse html was error: ', val)
-        console.log('--------')
-        console.error(e)
-      } 
+        fireEvent(el, 'appenderr');
+        console.error(e);
+      }
     }
   }
 
@@ -106,12 +132,14 @@
   }
 
   if (typeof exports == "object") {
-    module.exports = vueAppend
+    module.exports = vueAppend;
   } else if (typeof define == "function" && define.amd) {
-    define([], function(){ return vueAppend })
+    define([], function () {
+      return vueAppend
+    });
   } else if (window.Vue) {
-    window.VueAppend = vueAppend
-    Vue.use(vueAppend)
+    window.VueAppend = vueAppend;
+    Vue.use(vueAppend);
   }
 
-})()
+})();
