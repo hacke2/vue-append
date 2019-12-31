@@ -2,10 +2,6 @@
   "name": "vue-append",
   "version": "2.0.0",
   "main": "vue-append.js",
-  "files": [
-    "vue-append.js",
-    "vue-append.min.js"
-  ],
   "scripts": {
     "build": "uglifyjs vue-append.js -c -m > vue-append.min.js",
     "dev": "webpack --watch example/example.js example/example.build.js"
