@@ -3,15 +3,9 @@
   var vueAppend = {}
 
   var fireEvent = function (element, event) {
-    if (document.createEventObject) {
-      // for ie
-      var evt = document.createEventObject();
-      return element.fireEvent('on' + event, evt)
-    } else {
       var evt = document.createEvent('HTMLEvents');
       evt.initEvent(event, true, true);
       return !element.dispatchEvent(evt);
-    }
   };
 
 
