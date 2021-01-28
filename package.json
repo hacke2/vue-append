@@ -1,6 +1,6 @@
 {
   "name": "vue-append",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "vue-append, like v-html directive, but it can call javascript function",
   "main": "vue-append.js",
   "files": [
