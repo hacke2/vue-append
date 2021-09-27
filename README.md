@@ -52,6 +52,12 @@ template:
 </div>
 ```
 
+``` html
+<div id="app">
+    <div v-append.sync="html" @appended="appended"></div>
+</div>
+```
+
 js:
 
 ```js

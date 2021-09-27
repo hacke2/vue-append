@@ -1,6 +1,7 @@
 ;
 (function () {
   var vueAppend = {}
+  var async = true;
 
   var fireEvent = function (element, event) {
       var evt = document.createEvent('HTMLEvents');
@@ -63,7 +64,7 @@
             pendingIndex++;
             if (el.src) {
               var http = new XMLHttpRequest();
-              http.open('GET', el.src, true);
+              http.open('GET', el.src, async);
               http.onreadystatechange = function () {
                 if (http.readyState === 4) {
                   // Makes sure the document is ready to parse.
@@ -114,6 +115,11 @@
 
   vueAppend.install = function (Vue) {
     Vue.directive('append', {
+      bind: function (el, binding) {
+        if (binding.modifiers && binding.modifiers.sync) {
+          async = false;
+        }
+      },
       inserted: function (el, data) {
         exec(el, data.value);
       },
