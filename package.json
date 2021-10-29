@@ -27,8 +27,10 @@
   },
   "homepage": "https://github.com/hacke2/vue-append#readme",
   "dependencies": {
+    "vue": "^2.3.2"
+  },
+  "devDependencies": {
     "uglify-js": "^2.8.22",
-    "vue": "^2.3.2",
     "webpack": "^2.5.0"
   }
 }
